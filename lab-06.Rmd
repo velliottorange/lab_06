@@ -1,7 +1,7 @@
 ---
 title: "Lab 06 - Ugly charts and Simpson's paradox"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Verity Elliott"
+date: "02_11_2026"
 output: github_document
 ---
 
@@ -40,7 +40,7 @@ The data were converted from wide format to long format using pivot_longer(), wh
 
 The line plot displays the percentage of instructional staff by faculty type from 1975 to 2011. Each line represents a different faculty category, allowing for direct comparison of trends over time. The visualization shows a steady decline in the proportion of full-time tenured and tenure-track faculty, while part-time faculty positions have increased substantially. Graduate student and full-time non-tenure-track positions show more moderate changes over time.
 
-```{r fig.width=10, fig.height=6}
+```{r staff_plot}
 staff_long %>%
   ggplot(aes(
     x = year,
@@ -68,5 +68,32 @@ staff_long %>%
 If the primary goal of the visualization is to emphasize the increase in part-time faculty over time, the plot could be modified to draw more attention to that specific trend. For example, the line representing part-time faculty could be made thicker or darker, while the other lines could be muted in lighter colors to reduce visual competition. Direct labeling of the part-time line at the end of the time series could eliminate the need to reference the legend. Additionally, a brief annotation highlighting the upward trend would help guide the viewer toward the intended takeaway. These adjustments would make the central message more visually prominent.
 
 ### Exercise 2
+
+```{r}
+fisheries <- read_csv("data/fisheries.csv")
+```
+
+## Proposed Changes to Better Tell the Story 2.0
+
+The revised visualization shows the top 20 countries by total fisheries production in a horizontal bar chart, ordered from lowest to highest within this group. Focusing on the largest producers reduces clutter on the y-axis and makes it easier to compare countries that contribute most to global output. The horizontal layout also makes country names easier to read. With clear axis labels, an informative title, and a cited data source, the chart is transparent, easy to interpret, and effectively highlights differences in production.
+
+```{r fisheries_plot}
+fisheries %>%
+  mutate(total = capture + aquaculture) %>%
+  arrange(desc(total)) %>%
+  slice_head(n = 20) %>%   # Top 20 countries
+  ggplot(aes(x = reorder(country, total), y = total)) +
+  geom_col(fill = "aquamarine1") +
+  coord_flip() +
+  labs(
+    title = "Total Fisheries Production (2016) - Top 20 Countries",
+    x = "Country",
+    y = "Total Production (tons)",
+    caption = "Source: FAO Fisheries and Aquaculture Department"
+  ) +
+  theme_minimal()
+```
+
+Additional improvements could include color-coding countries by continent to reveal geographic patterns; adding interactivity - such as tooltips or selectable countries - which would be particularly valuable given the dataset includes over 200 countries, making a static plot difficult to interpret; and using a logarithmic scale since production values are highly skewed, which would make differences among smaller producers more visible without distorting the top values.
 
 ### Exercise 3
