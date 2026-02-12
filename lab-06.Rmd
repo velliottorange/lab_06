@@ -96,6 +96,37 @@ fisheries %>%
 
 Additional improvements could include color-coding countries by continent to reveal geographic patterns; adding interactivity - such as tooltips or selectable countries - which would be particularly valuable given the dataset includes over 200 countries, making a static plot difficult to interpret; and using a logarithmic scale since production values are highly skewed, which would make differences among smaller producers more visible without distorting the top values.
 
+---
+
+## I Aspired!
+
+```{r fish}
+# Shift amount
+shift_x <- 2
+
+# Body (ellipse)
+theta <- seq(0, 2*pi, length.out = 200)
+x_body <- cos(theta) + shift_x
+y_body <- 0.5 * sin(theta)
+
+# Tail (triangle)
+x_tail <- c(-1, -1.3, -1.3) + shift_x
+y_tail <- c(0, 0.3, -0.3)
+
+# All x and y coordinates for proper plotting limits
+x_all <- c(x_body, x_tail)
+y_all <- c(y_body, y_tail)
+
+# Plot without axes
+plot(x_all, y_all, type = "n", asp = 1, xlab = "", ylab = "", main = "Cod-ordinate Geometry", axes = FALSE)
+box()
+polygon(x_body, y_body, col = "orange")   # Body
+polygon(x_tail, y_tail, col = "orange")   # Tail
+points(shift_x + 0.6, 0.1, pch = 19, col = "black", cex = 1.5)  # Eye
+```
+
+Just kidding. I made a fish. I have never been so proud.
+
 ### Exercise 3
 
 ```{r}
@@ -245,7 +276,7 @@ ggplot(Whickham, aes(x = smoker, fill = outcome)) +
 
 The extended contingency table shows the number of participants for each combination of smoking status, age group, and 20-year health outcome. Mortality clearly increases with age, and within each age group, smokers generally have a higher proportion of deaths than non-smokers. This highlights the importance of considering age: the overall counts initially suggest lower mortality among smokers, but stratifying by age reveals the true pattern and avoids misleading conclusions about the relationship between smoking and long-term health.
 
-```{r}
+```{r extended_contingency}
 Whickham %>%
   count(smoker, age_cat, outcome)
 ```
