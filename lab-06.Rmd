@@ -15,20 +15,58 @@ library(mosaicData)
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+## Wide to Long Transformation
+
+The dataset contains five faculty types and eleven years of data. When converting from wide to long format, each combination of faculty type and year becomes its own row. Therefore, the total number of rows in the long-format dataset should be 5 × 11 = 55 rows. This reflects one observation per faculty type per year.
+
+```{r staff_long}
+staff <- read_csv("data/instructional-staff.csv")
+
+staff_long <- staff %>%
+  pivot_longer(cols = -faculty_type, names_to = "year") %>%
+  mutate(
+    value = as.numeric(value),
+    year = as.numeric(year)
+  )
+
+staff_long
+```
+
+The data were converted from wide format to long format using pivot_longer(), where all year columns were gathered into a single variable called year, and their corresponding percentages were stored in a variable called value. This restructuring allows each row to represent one faculty type in one specific year. The resulting dataset contains 55 rows, which matches the expected number of faculty type–year combinations.
+
+---
+
+## Line Plot of Instructional Staff Trends
+
+The line plot displays the percentage of instructional staff by faculty type from 1975 to 2011. Each line represents a different faculty category, allowing for direct comparison of trends over time. The visualization shows a steady decline in the proportion of full-time tenured and tenure-track faculty, while part-time faculty positions have increased substantially. Graduate student and full-time non-tenure-track positions show more moderate changes over time.
+
+```{r fig.width=10, fig.height=6}
+staff_long %>%
+  ggplot(aes(
+    x = year,
+    y = value,
+    group = faculty_type,
+    color = faculty_type
+  )) +
+  geom_line(size = 1.2) +
+  labs(
+    title = "Trends in Instructional Staff Employment (1975–2011)",
+    x = "Year",
+    y = "Percentage of Instructional Staff",
+    color = "Faculty Type"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
+---
+
+## Proposed Changes to Better Tell the Story
+
+If the primary goal of the visualization is to emphasize the increase in part-time faculty over time, the plot could be modified to draw more attention to that specific trend. For example, the line representing part-time faculty could be made thicker or darker, while the other lines could be muted in lighter colors to reduce visual competition. Direct labeling of the part-time line at the end of the time series could eliminate the need to reference the legend. Additionally, a brief annotation highlighting the upward trend would help guide the viewer toward the intended takeaway. These adjustments would make the central message more visually prominent.
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
-
 ### Exercise 3
-
-...
-
-Add exercise headings as needed.
